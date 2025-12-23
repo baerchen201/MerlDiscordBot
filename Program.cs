@@ -106,6 +106,7 @@ public static class MerlDiscordBot
                 switch (ctx.Data.Name)
                 {
                     case COMMAND_NAME:
+                        var question = ctx.Data.Options.First().Value.ToString();
                         await ctx.RespondAsync(
                             embed: new EmbedBuilder()
                             {
@@ -114,7 +115,7 @@ public static class MerlDiscordBot
                                     Name = "Merl",
                                     IconUrl = client.CurrentUser.GetAvatarUrl(),
                                 },
-                                Description = "I don't know.",
+                                Description = Answer(question),
                                 Color = new Color((byte)0xE2, (byte)0x8A, (byte)0xBF),
                                 Footer = new EmbedFooterBuilder()
                                 {
@@ -125,7 +126,7 @@ public static class MerlDiscordBot
                                     "https://raw.githubusercontent.com/baerchen201/MerlDiscordBot/refs/heads/main/Merl.png",
                                 ThumbnailUrl =
                                     "https://raw.githubusercontent.com/baerchen201/MerlDiscordBot/refs/heads/main/morl.png",
-                                Title = ctx.Data.Options.First().Value.ToString(),
+                                Title = question,
                             }.Build()
                         );
                         break;
@@ -210,5 +211,18 @@ public static class MerlDiscordBot
             LogFatal(e);
             return 1;
         }
+    }
+
+    public static string Answer(string question)
+    {
+        if (
+            new ProfanityFilter.ProfanityFilter().ContainsProfanity(question)
+            || question.Contains("craft a minecart", StringComparison.InvariantCultureIgnoreCase) /* How to craft a minecart */
+            || new Random(
+                question.GetHashCode(StringComparison.InvariantCultureIgnoreCase)
+            ).NextSingle() <= 0.05 /* 5% chance to just reject a question randomly */
+        )
+            return "Your last message contains language that violates our content policy. Please reword your response.";
+        return "I don't know.";
     }
 }
