@@ -136,7 +136,8 @@ public static class MerlDiscordBot
             {
                 var message =
                     logMessage.Exception == null ? logMessage.Message
-                    : logMessage.Message.IsWhiteSpace() ? logMessage.Exception.ToString()
+                    : string.IsNullOrWhiteSpace(logMessage.Message)
+                        ? logMessage.Exception.ToString()
                     : $"{logMessage.Message}: {logMessage.Exception}";
                 switch (logMessage.Severity)
                 {
