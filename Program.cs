@@ -182,6 +182,11 @@ public static class MerlDiscordBot
                                 Type = ApplicationCommandOptionType.String,
                             },
                         ],
+                        ContextTypes =
+                        [
+                            InteractionContextType.Guild,
+                            InteractionContextType.PrivateChannel,
+                        ],
                     }.Build()
                 );
             }
